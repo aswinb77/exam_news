@@ -17,6 +17,7 @@ Get the latest news, notices, and updates from across various public examination
   - Spotlight hero card for the newest announcements
   - Responsive, modern Tailwind UI
 - **Structured Data (`announcements.json`)**: Scraped notices stored in a lightweight JSON format for easy ingestion.
+- **Automated Cloud Scheduling**: GitHub Actions workflow runs every 6 hours automatically to fetch new updates and keep the dashboard refreshed without keeping your computer on.
 
 ## 🚀 Getting Started
 
