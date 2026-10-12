@@ -6,6 +6,7 @@ Supports:
   2. GATE 2027 - https://gate2027.iitm.ac.in/
 """
 
+import copy
 import json
 import re
 import sys
@@ -80,11 +81,39 @@ def scrape_neet():
 
 
 def scrape_gate():
-    """Scrapes announcements and key dates from GATE 2027 portal."""
+    """Scrapes announcements, live ticker notices, and key dates from GATE 2027 portal."""
     base_url = "https://gate2027.iitm.ac.in/"
     announcements = []
     seen = set()
 
+    # 1. Fetch live ticker notices from homepage
+    print(f"[*] Fetching GATE 2027 live ticker notices from {base_url}...")
+    try:
+        r = requests.get(base_url, headers=HEADERS, timeout=15)
+        if r.status_code == 200:
+            soup = BeautifulSoup(r.text, "html.parser")
+            track = soup.select_one(".notif-ticker")
+            if track:
+                for nb in track.find_all(class_="new-badge"):
+                    nb.decompose()
+                for sep in track.find_all(class_="ticker-sep"):
+                    sep.replace_with("|||")
+                raw_text = track.get_text(separator=" ", strip=True)
+                for item in raw_text.split("|||"):
+                    cleaned = re.sub(r"\s+", " ", item).strip()
+                    cleaned = re.sub(r"(\d+)\s+(st|nd|rd|th)\b", r"\1\2", cleaned)
+                    if cleaned and cleaned not in seen and len(cleaned) > 10:
+                        seen.add(cleaned)
+                        announcements.append({
+                            "exam": "GATE 2027",
+                            "category": "Latest News (Ticker)",
+                            "title": cleaned,
+                            "url": base_url,
+                        })
+    except requests.RequestException as e:
+        print(f"[!] Error fetching GATE home ticker: {e}")
+
+    # 2. Fetch document notifications
     notif_url = urljoin(base_url, "notifications")
     print(f"[*] Fetching GATE 2027 notifications from {notif_url}...")
     try:
@@ -115,23 +144,47 @@ def scrape_gate():
     except requests.RequestException as e:
         print(f"[!] Error fetching GATE notifications: {e}")
 
+    # 3. Fetch important dates
     dates_url = urljoin(base_url, "important_dates")
     print(f"[*] Fetching GATE 2027 dates from {dates_url}...")
     try:
         r = requests.get(dates_url, headers=HEADERS, timeout=15)
         if r.status_code == 200:
             soup = BeautifulSoup(r.text, "html.parser")
+            current_activity = ""
             for tr in soup.select("table tr"):
-                cols = [td.get_text(strip=True) for td in tr.find_all(["td", "th"])]
-                if len(cols) >= 2 and cols[0] != "Activity":
-                    activity = re.sub(r'\s+', ' ', cols[0]).strip()
-                    date_val = re.sub(r'\s+', ' ', cols[1]).strip()
-                    announcements.append({
-                        "exam": "GATE 2027",
-                        "category": "Important Dates",
-                        "title": f"{activity} — {date_val}",
-                        "url": dates_url,
-                    })
+                tds = tr.find_all(["td", "th"])
+                if not tds or tds[0].name == "th":
+                    continue
+                if len(tds) == 3:
+                    current_activity = re.sub(r"\s+", " ", tds[0].get_text(separator=" ", strip=True)).strip()
+                    date_td = copy.copy(tds[1])
+                elif len(tds) == 2:
+                    t0 = re.sub(r"\s+", " ", tds[0].get_text(separator=" ", strip=True)).strip()
+                    if "exam" in current_activity.lower():
+                        date_td = copy.copy(tds[0])
+                    else:
+                        current_activity = t0
+                        date_td = copy.copy(tds[1])
+                else:
+                    continue
+
+                for d in date_td.find_all("del"):
+                    d.decompose()
+                date_val = re.sub(r"\s+", " ", date_td.get_text(separator=" ", strip=True)).strip()
+                date_val = re.sub(r"(\d+)\s+(st|nd|rd|th)\b", r"\1\2", date_val)
+                current_activity = re.sub(r"(\d+)\s+(st|nd|rd|th)\b", r"\1\2", current_activity)
+
+                if date_val and date_val.lower() not in ("day", "saturday sunday"):
+                    title_text = f"{current_activity} — {date_val}"
+                    if title_text not in seen:
+                        seen.add(title_text)
+                        announcements.append({
+                            "exam": "GATE 2027",
+                            "category": "Important Dates",
+                            "title": title_text,
+                            "url": dates_url,
+                        })
     except requests.RequestException as e:
         print(f"[!] Error fetching GATE dates: {e}")
 
