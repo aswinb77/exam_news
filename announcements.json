@@ -308,7 +308,7 @@
   {
     "exam": "GATE 2027",
     "category": "Latest News (Ticker)",
-    "title": "Application Portal is now CLOSED",
+    "title": "The online registration portal (with late fee) will be reopened from 15 October 2026, 10:30 AM to 16 October 2026, 10:29 AM.",
     "url": "https://gate2027.iitm.ac.in/"
   },
   {
@@ -351,6 +351,12 @@
     "exam": "GATE 2027",
     "category": "Important Dates",
     "title": "Closing Date of EXTENDED online registration (with late fee) — 12th October 2026",
+    "url": "https://gate2027.iitm.ac.in/important_dates"
+  },
+  {
+    "exam": "GATE 2027",
+    "category": "Important Dates",
+    "title": "Special Window for Registration (with late fee) — 15th October 2026, 10:30AM to 16th October 2026, 10:29AM",
     "url": "https://gate2027.iitm.ac.in/important_dates"
   },
   {
