@@ -308,6 +308,12 @@
   {
     "exam": "GATE 2027",
     "category": "Latest News (Ticker)",
+    "title": "Application registration is CLOSED",
+    "url": "https://gate2027.iitm.ac.in/"
+  },
+  {
+    "exam": "GATE 2027",
+    "category": "Latest News (Ticker)",
     "title": "Candidates are advised NOT to delete their verified or unverified DigiLocker accounts after GATE 2027 application submission and the payment of application fee. Future communications from GATE 2027 will ONLY be made with respect to the DigiLocker account using which the candidate has submitted the application.",
     "url": "https://gate2027.iitm.ac.in/"
   },
@@ -356,13 +362,19 @@
   {
     "exam": "GATE 2027",
     "category": "Important Dates",
-    "title": "Opening Date of GATE 2027 Application rectification — 14th October 2026",
+    "title": "Opening Date of GATE 2027 Application rectification (Scrutiny Defects) — 14th October 2026",
     "url": "https://gate2027.iitm.ac.in/important_dates"
   },
   {
     "exam": "GATE 2027",
     "category": "Important Dates",
-    "title": "Closing Date of GATE 2027 Application rectification — 21st October 2026",
+    "title": "Closing Date of GATE 2027 Application rectification (Scrutiny Defects) — 31st October 2026",
+    "url": "https://gate2027.iitm.ac.in/important_dates"
+  },
+  {
+    "exam": "GATE 2027",
+    "category": "Important Dates",
+    "title": "Date of GATE 2027 Application Data correction window (Candidate Request with fee) — TBA",
     "url": "https://gate2027.iitm.ac.in/important_dates"
   },
   {
